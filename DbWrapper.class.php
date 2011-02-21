@@ -5,10 +5,24 @@ class DbWrapper
 	
 	private static $instance = null;
 	
+	private static $config = array(
+		'host' => 'localhost',
+		'username' => 'root',
+		'password' => '',
+		'db' => 'test',
+		);
+	
 	private function __construct()
 	{
-		$this->connection = mysql_connect('localhost', 'root', '');
-		mysql_select_db('test', $this->connection);
+		$config = self::$config + array(
+			'host' => 'localhost',
+			'username' => 'root',
+			'password' => '',
+			'db' => 'test',
+			);
+		
+		$this->connection = mysql_connect($config['host'], $config['username'], $config['password']);
+		mysql_select_db($config['db'], $this->connection);
 	}
 	
 	public function query($sql)
@@ -65,6 +79,11 @@ class DbWrapper
 	public function getError()
 	{
 		return mysql_error($this->connection);
+	}
+	
+	public static function setConfig($config)
+	{
+		self::$config = $config;
 	}
 	
 }
